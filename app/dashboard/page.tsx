@@ -1,0 +1,35 @@
+import Link from 'next/link'
+import { PublishProjectForm } from '@/components/publish-project-form'
+import { deleteEnquiry, deletePortfolioProject, getEnquiries, getPortfolioProjects, requireUser, savePortfolioProject, updateEnquiry, updatePortfolioProject } from './actions'
+
+export default async function DashboardPage() {
+  const user = await requireUser()
+  const enquiries = await getEnquiries()
+  const portfolioProjects = await getPortfolioProjects()
+
+  return (
+    <main className="min-h-screen bg-ivory text-ink">
+      <header className="border-b border-ink/10">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
+          <Link href="/" className="font-serif text-2xl">Anvance</Link>
+          <div className="flex items-center gap-4 text-sm"><span className="hidden text-ink/55 sm:inline">{user.email}</span><Link href="/" className="rounded-full border border-ink/20 px-4 py-2">View site</Link></div>
+        </div>
+      </header>
+      <div className="mx-auto max-w-6xl px-6 py-14">
+        <p className="text-xs uppercase tracking-[0.28em] text-gold-dark">Private studio</p>
+        <h1 className="mt-4 font-serif text-5xl md:text-7xl">Your studio desk.</h1>
+        <p className="mt-5 max-w-2xl text-lg text-ink/60">Manage new enquiries and shape the portfolio behind your Italy elopement films and photographs.</p>
+
+        <section className="mt-14 rounded-[2rem] border border-ink/10 bg-white/45 p-7">
+          <div className="flex items-end justify-between gap-4"><div><p className="text-xs uppercase tracking-[0.2em] text-ink/45">Inbox</p><h2 className="mt-2 font-serif text-3xl">Recent enquiries</h2></div><span className="text-sm text-ink/50">{enquiries.length} total</span></div>
+          {enquiries.length === 0 ? <p className="mt-8 border-t border-ink/10 pt-8 text-sm text-ink/55">New enquiries will appear here after someone submits the Check our date form.</p> : <div className="mt-8 divide-y divide-ink/10 border-y border-ink/10">{enquiries.map((enquiry) => <article key={enquiry.id} className="grid gap-6 py-7 lg:grid-cols-[1fr_1fr_1.2fr_auto]"><div><p className="font-serif text-2xl">{enquiry.name}</p><a href={`mailto:${enquiry.email}`} className="mt-1 block text-sm underline underline-offset-4">{enquiry.email}</a>{enquiry.phone && <a href={`tel:${enquiry.phone}`} className="mt-1 block text-sm underline underline-offset-4">{enquiry.phone}</a>}</div><div className="text-sm text-ink/65"><p>{enquiry.location || 'Location to confirm'}</p><p className="mt-1">{enquiry.weddingDate || 'Date to confirm'}</p><p className="mt-1">{enquiry.coverage || 'Coverage to confirm'}</p></div><p className="text-sm leading-6 text-ink/65">{enquiry.message || 'No message included.'}</p><div className="flex items-start gap-2 lg:flex-col"><details className="group"><summary className="cursor-pointer rounded-full border border-ink/20 px-4 py-2 text-xs uppercase tracking-[.14em] transition-colors hover:bg-ink hover:text-ivory">Edit</summary><form action={updateEnquiry} className="mt-3 grid min-w-56 gap-3 rounded-2xl border border-ink/10 bg-ivory p-4"><input type="hidden" name="id" value={enquiry.id} /><label className="grid gap-1 text-xs">Coverage<input name="coverage" defaultValue={enquiry.coverage || ''} className="rounded-xl border border-ink/15 bg-transparent px-3 py-2" /></label><label className="grid gap-1 text-xs">Message<textarea name="message" defaultValue={enquiry.message || ''} rows={4} className="rounded-xl border border-ink/15 bg-transparent px-3 py-2" /></label><button type="submit" className="rounded-full bg-ink px-3 py-2 text-xs text-ivory">Save changes</button></form></details><form action={deleteEnquiry}><input type="hidden" name="id" value={enquiry.id} /><button type="submit" className="rounded-full border border-red-900/20 px-4 py-2 text-xs uppercase tracking-[.14em] text-red-900">Delete</button></form></div></article>)}</div>}
+        </section>
+
+        <section className="mt-8 rounded-[2rem] border border-ink/10 bg-white/45 p-7">
+          <div className="flex items-center justify-between"><div><h2 className="font-serif text-3xl">Portfolio projects</h2><p className="mt-2 text-sm text-ink/55">{portfolioProjects.length} live project{portfolioProjects.length === 1 ? '' : 's'}</p></div><span className="text-xs uppercase tracking-[0.2em] text-ink/45">Live content</span></div>{portfolioProjects.length > 0 && <div className="mt-6 grid gap-4 border-y border-ink/10 py-5">{portfolioProjects.map(({ project, media }) => <article key={project.id} className="rounded-2xl border border-ink/10 bg-ivory/60 p-4"><div className="flex flex-wrap items-start justify-between gap-4"><div><p className="font-serif text-xl">{project.title}</p><p className="mt-1 text-sm text-ink/55">{project.destination} · {project.format} · {media.length} media {media.length === 1 ? 'file' : 'files'}</p></div><div className="flex gap-2"><details><summary className="cursor-pointer rounded-full border border-ink/20 px-4 py-2 text-xs uppercase tracking-[.14em] transition-colors hover:bg-ink hover:text-ivory">Edit</summary><form action={updatePortfolioProject} className="mt-3 grid min-w-64 gap-3 rounded-2xl border border-ink/10 bg-ivory p-4"><input type="hidden" name="id" value={project.id} /><label className="grid gap-1 text-xs">Project title<input name="title" defaultValue={project.title} required className="rounded-xl border border-ink/15 bg-transparent px-3 py-2" /></label><label className="grid gap-1 text-xs">Destination<input name="destination" defaultValue={project.destination} required className="rounded-xl border border-ink/15 bg-transparent px-3 py-2" /></label><label className="grid gap-1 text-xs">Mood / category<input name="mood" defaultValue={project.format} className="rounded-xl border border-ink/15 bg-transparent px-3 py-2" /></label><label className="flex items-center gap-2 text-xs"><input name="featured" type="checkbox" value="true" defaultChecked={project.featured} /> Show in homepage Italy section</label><label className="grid gap-1 text-xs">Story summary<textarea name="summary" defaultValue={project.story} rows={4} className="rounded-xl border border-ink/15 bg-transparent px-3 py-2" /></label><button type="submit" className="rounded-full bg-ink px-3 py-2 text-xs text-ivory">Save changes</button></form></details><form action={deletePortfolioProject}><input type="hidden" name="id" value={project.id} /><button type="submit" className="rounded-full border border-red-900/30 px-4 py-2 text-xs uppercase tracking-[.14em] text-red-900">Delete</button></form></div></div><div className="mt-4 flex flex-wrap gap-2">{media.slice(0, 6).map((item) => <a key={item.id} href={item.url} target="_blank" rel="noreferrer" className="overflow-hidden rounded-xl border border-ink/10"><img src={item.url} alt={item.alt} className="h-16 w-16 object-cover" /></a>)}{media.length > 6 && <span className="self-center text-xs text-ink/50">+{media.length - 6} more</span>}</div></article>)}</div>}
+          <PublishProjectForm />
+        </section>
+      </div>
+    </main>
+  )
+}
