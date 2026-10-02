@@ -1,31 +1,24 @@
 import type { MetadataRoute } from 'next'
-import { eq } from 'drizzle-orm'
+import { desc, eq } from 'drizzle-orm'
 import { db } from '@/lib/db'
 import { portfolioProjects } from '@/lib/db/schema'
 
 const base = 'https://anvanceelopement.com'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const projects = await db
-    .select({ slug: portfolioProjects.slug, updatedAt: portfolioProjects.updatedAt })
-    .from(portfolioProjects)
-    .where(eq(portfolioProjects.published, true))
-
-  const staticRoutes: MetadataRoute.Sitemap = [
-    { url: base, lastModified: new Date(), changeFrequency: 'monthly', priority: 1 },
-    { url: `${base}/portfolio`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
-    { url: `${base}/about`, lastModified: new Date(), changeFrequency: 'yearly', priority: 0.7 },
-    { url: `${base}/contact`, lastModified: new Date(), changeFrequency: 'yearly', priority: 0.8 },
+  // Omit lastModified for static pages unless their content changes. A fresh date on
+  // every request can send misleading update signals to search engines.
+  const pages: MetadataRoute.Sitemap = [
+    { url: base, changeFrequency: 'monthly', priority: 1 },
+    { url: `${base}/portfolio`, changeFrequency: 'weekly', priority: 0.8 },
+    { url: `${base}/about`, changeFrequency: 'yearly', priority: 0.7 },
+    { url: `${base}/contact`, changeFrequency: 'yearly', priority: 0.9 },
   ]
 
-  return [
-    ...staticRoutes,
-    ...projects.map((project) => ({
-      url: `${base}/portfolio/${project.slug}`,
-      lastModified: project.updatedAt ?? new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.7,
-    })),
-  ]
+  try {
+    const albums = await db.select({ slug: portfolioProjects.slug, updatedAt: portfolioProjects.updatedAt }).from(portfolioProjects).where(eq(portfolioProjects.published, true)).orderBy(desc(portfolioProjects.updatedAt))
+    return [...pages, ...albums.map((album) => ({ url: `${base}/portfolio/${album.slug}`, lastModified: album.updatedAt, changeFrequency: 'yearly' as const, priority: 0.7 }))]
+  } catch {
+    return pages
+  }
 }
-
