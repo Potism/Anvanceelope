@@ -1,3 +1,13 @@
 import type { MetadataRoute } from 'next'
 
-export default function robots(): MetadataRoute.Robots { return { rules: { userAgent: '*', allow: '/' }, sitemap: 'https://anvanceelopement.com/sitemap.xml' } }
+export default function robots(): MetadataRoute.Robots {
+  return {
+    rules: {
+      userAgent: '*',
+      allow: '/',
+      disallow: ['/api/', '/dashboard/', '/sign-in', '/sign-up'],
+    },
+    sitemap: 'https://www.anvanceelopement.com/sitemap.xml',
+    host: 'https://www.anvanceelopement.com',
+  }
+}

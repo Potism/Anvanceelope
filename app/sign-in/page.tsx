@@ -1,5 +1,11 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { SignInForm } from './form'
+
+export const metadata: Metadata = {
+  title: 'Studio Sign In',
+  robots: { index: false, follow: false },
+}
 
 type Props = { searchParams: Promise<{ next?: string }> }
 

@@ -5,7 +5,7 @@ import { CookieConsent } from '@/components/cookie-consent'
 import { LocaleProvider } from '@/components/locale-provider'
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://anvanceelopement.com'),
+  metadataBase: new URL('https://www.anvanceelopement.com'),
   title: { default: 'Anvance Elopement | Italy Elopement Photography & Films', template: '%s | Anvance Elopement' },
   description: 'Anvance creates intimate Italy elopement photography and cinematic wedding films for couples planning a destination wedding in Tuscany, Lake Como, the Dolomites, Venice and the Amalfi Coast.',
   keywords: ['Italy elopement photographer', 'Italy elopement videographer', 'Italy wedding photographer', 'Italy wedding videographer', 'Italy wedding films', 'destination wedding photographer Italy', 'Tuscany elopement photographer', 'Lake Como wedding photographer', 'Dolomites elopement videographer', 'Amalfi Coast wedding films', 'Venice wedding photographer', 'Italian destination wedding'],
@@ -35,7 +35,8 @@ export const metadata: Metadata = {
     images: ['https://hebbkx1anhila5yf.public.blob.vercel-storage.com/anvanceelopmentlogo-aXDhassIf5mIXnPRdFpEdZ8EBnS1az.png'],
   },
   icons: {
-    icon: '/icon.svg',
+    icon: [{ url: '/icon.svg', type: 'image/svg+xml', sizes: 'any' }],
+    shortcut: '/icon.svg',
     apple: '/icon.svg',
   },
 }
@@ -59,11 +60,11 @@ export default function RootLayout({
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
           '@context': 'https://schema.org',
           '@type': ['ProfessionalService', 'LocalBusiness'],
-          '@id': 'https://anvanceelopement.com/#business',
+          '@id': 'https://www.anvanceelopement.com/#business',
           name: 'Anvance Elopement',
-          url: 'https://anvanceelopement.com',
+          url: 'https://www.anvanceelopement.com',
           image: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/anvanceelopmentlogo-aXDhassIf5mIXnPRdFpEdZ8EBnS1az.png',
-          logo: 'https://anvanceelopement.com/icon.svg',
+          logo: 'https://www.anvanceelopement.com/icon.svg',
           description: 'Italy elopement photography, destination wedding photography, and cinematic wedding films.',
           telephone: '+39 340 742 1347',
           email: 'hello@anvanceelopement.com',

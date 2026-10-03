@@ -3,7 +3,7 @@ import { desc, eq } from 'drizzle-orm'
 import { db } from '@/lib/db'
 import { portfolioProjects } from '@/lib/db/schema'
 
-const base = 'https://anvanceelopement.com'
+const base = 'https://www.anvanceelopement.com'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Omit lastModified for static pages unless their content changes. A fresh date on
