@@ -4,8 +4,8 @@ import { ArrowUpRight, Play } from 'lucide-react'
 import { LocaleToggle } from '@/components/locale-toggle'
 
 export const metadata: Metadata = {
-  title: 'About Anvance | Italy Elopement Films, Social Content & Creative Production',
-  description: 'Meet the creative filmmakers behind Anvance. We create honest Italy elopement films, wedding photography, and social content for restaurants, hotels, fashion, and brands.',
+  title: 'About Our Italy Photography & Videography Team',
+  description: 'Meet Anvance Elopement, the Italy-based photography and videography team creating honest elopement films, wedding photography and visual stories.',
   alternates: { canonical: '/about' },
   openGraph: {
     title: 'About Anvance — Creative filmmakers in Italy',
