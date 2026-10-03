@@ -1,6 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
-  <title>Anvance Elopement monogram</title>
-  <rect width="64" height="64" rx="12" fill="#f4f1eb"/>
-  <path d="M12 49 26.5 15h5L46 49h-7l-3.5-9H22l-3.5 9H12Zm12.2-14h9l-4.5-12-4.5 12Z" fill="#161616"/>
-  <path d="M36 15h7l8.5 25.8L59 15h5L53 49h-5L36 15Z" fill="#161616"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="14" fill="#25221f"/>
+  <path d="M16 47 29.2 16h5.6L48 47h-7.1l-2.8-7H25.6l-2.8 7H16Zm12-13h7.8L32 24.2 28 34Z" fill="#f5f0e8"/>
+  <circle cx="47" cy="17" r="3" fill="#b66e4f"/>
 </svg>

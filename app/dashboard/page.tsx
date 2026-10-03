@@ -1,5 +1,11 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { PublishProjectForm } from '@/components/publish-project-form'
+
+export const metadata: Metadata = {
+  title: 'Private Studio',
+  robots: { index: false, follow: false },
+}
 import { deleteEnquiry, deletePortfolioProject, getEnquiries, getPortfolioProjects, requireUser, savePortfolioProject, updateEnquiry, updatePortfolioProject } from './actions'
 
 export default async function DashboardPage() {

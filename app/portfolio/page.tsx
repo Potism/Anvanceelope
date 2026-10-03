@@ -11,7 +11,12 @@ export const metadata: Metadata = {
 }
 
 export default async function PortfolioPage() {
-  const projects = await db.select({ project: portfolioProjects, media: portfolioMedia }).from(portfolioProjects).leftJoin(portfolioMedia, eq(portfolioMedia.projectId, portfolioProjects.id)).orderBy(asc(portfolioProjects.createdAt), asc(portfolioMedia.sortOrder))
+  let projects: Array<{ project: typeof portfolioProjects.$inferSelect; media: typeof portfolioMedia.$inferSelect | null }> = []
+  try {
+    projects = await db.select({ project: portfolioProjects, media: portfolioMedia }).from(portfolioProjects).leftJoin(portfolioMedia, eq(portfolioMedia.projectId, portfolioProjects.id)).where(eq(portfolioProjects.published, true)).orderBy(asc(portfolioProjects.createdAt), asc(portfolioMedia.sortOrder))
+  } catch {
+    projects = []
+  }
   const grouped = projects.reduce<Array<{ id: string; slug: string; title: string; destination: string; summary: string; mood: string; media: { url: string; alt: string }[] }>>((all, row) => {
     const existing = all.find((project) => project.id === row.project.id)
     if (existing) { if (row.media) existing.media.push({ url: row.media.url, alt: row.media.alt }); return all }

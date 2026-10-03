@@ -5,12 +5,14 @@ import { CookieConsent } from '@/components/cookie-consent'
 import { LocaleProvider } from '@/components/locale-provider'
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://anvanceelopement.com'),
-  title: 'Anvance Elopement | Italy Elopement Photography & Films',
-  description: 'Anvance Elopement creates intimate elopement photography and cinematic wedding films across Italy, including Tuscany, the Amalfi Coast, Lake Como, Venice and the Dolomites.',
-  keywords: ['Italy wedding photographer', 'Italy wedding videographer', 'Italy elopement photographer', 'Italy elopement videographer', 'Italian wedding photography', 'Italian wedding films', 'destination wedding photography Italy', 'destination wedding videography Italy', 'Amalfi Coast wedding photographer', 'Lake Como wedding photographer', 'Tuscany elopement photographer', 'Dolomites wedding film'],
+  metadataBase: new URL('https://www.anvanceelopement.com'),
+  title: { default: 'Anvance Elopement | Italy Elopement Photography & Films', template: '%s | Anvance Elopement' },
+  description: 'Anvance creates intimate Italy elopement photography and cinematic wedding films for couples planning a destination wedding in Tuscany, Lake Como, the Dolomites, Venice and the Amalfi Coast.',
+  keywords: ['Italy elopement photographer', 'Italy elopement videographer', 'Italy wedding photographer', 'Italy wedding videographer', 'Italy wedding films', 'destination wedding photographer Italy', 'Tuscany elopement photographer', 'Lake Como wedding photographer', 'Dolomites elopement videographer', 'Amalfi Coast wedding films', 'Venice wedding photographer', 'Italian destination wedding'],
   authors: [{ name: 'Anvance Elopement' }],
   creator: 'Anvance Elopement',
+  publisher: 'Anvance Elopement',
+  category: 'wedding photography and videography',
   alternates: { canonical: '/' },
   robots: { index: true, follow: true, googleBot: { index: true, follow: true, 'max-image-preview': 'large' } },
   openGraph: {
@@ -33,7 +35,8 @@ export const metadata: Metadata = {
     images: ['https://hebbkx1anhila5yf.public.blob.vercel-storage.com/anvanceelopmentlogo-aXDhassIf5mIXnPRdFpEdZ8EBnS1az.png'],
   },
   icons: {
-    icon: '/icon.svg',
+    icon: [{ url: '/icon.svg', type: 'image/svg+xml', sizes: 'any' }],
+    shortcut: '/icon.svg',
     apple: '/icon.svg',
   },
 }
@@ -54,6 +57,26 @@ export default function RootLayout({
   return (
     <html lang="en-IT">
       <body className="antialiased">
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': ['ProfessionalService', 'LocalBusiness'],
+          '@id': 'https://www.anvanceelopement.com/#business',
+          name: 'Anvance Elopement',
+          url: 'https://www.anvanceelopement.com',
+          image: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/anvanceelopmentlogo-aXDhassIf5mIXnPRdFpEdZ8EBnS1az.png',
+          logo: 'https://www.anvanceelopement.com/icon.svg',
+          description: 'Italy elopement photography, destination wedding photography, and cinematic wedding films.',
+          telephone: '+39 340 742 1347',
+          email: 'hello@anvanceelopement.com',
+          priceRange: '€€',
+          areaServed: ['Italy', 'Tuscany', 'Lake Como', 'Dolomites', 'Amalfi Coast', 'Venice', 'Puglia', 'Sicily'],
+          sameAs: ['https://instagram.com/anvance.elopement', 'https://www.tiktok.com/@anvance.elopement'],
+          hasOfferCatalog: { '@type': 'OfferCatalog', name: 'Italy wedding photo and film services', itemListElement: [
+            { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Italy elopement videography' } },
+            { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Destination wedding photography in Italy' } },
+            { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Cinematic wedding films in Italy' } },
+          ] },
+        }) }} />
         <LocaleProvider>{children}</LocaleProvider>
         <CookieConsent />
         {process.env.NODE_ENV === 'production' && <Analytics />}
