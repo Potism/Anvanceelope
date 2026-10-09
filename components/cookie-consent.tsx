@@ -1,22 +1,65 @@
 'use client'
 
+import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 const COOKIE_NAME = 'anvance_cookie_consent'
+const META_PIXEL_ID = '967404376418856'
+
+declare global {
+  interface Window {
+    fbq?: ((...args: unknown[]) => void) & { callMethod?: (...args: unknown[]) => void; queue?: unknown[]; loaded?: boolean; version?: string }
+    _fbq?: Window['fbq']
+  }
+}
+
+function initializeMetaPixel() {
+  if (window.fbq) return
+
+  const fbq: NonNullable<Window['fbq']> = function (...args: unknown[]) {
+    if (fbq.callMethod) fbq.callMethod(...args)
+    else fbq.queue?.push(args)
+  }
+
+  fbq.queue = []
+  fbq.loaded = true
+  fbq.version = '2.0'
+  window.fbq = fbq
+  window._fbq = fbq
+
+  const script = document.createElement('script')
+  script.async = true
+  script.src = 'https://connect.facebook.net/en_US/fbevents.js'
+  document.head.appendChild(script)
+
+  fbq('init', META_PIXEL_ID)
+}
 
 export function CookieConsent() {
+  const pathname = usePathname()
+  const [consent, setConsent] = useState<'accepted' | 'necessary' | null>(null)
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
-    const hasConsent = document.cookie
+    const savedConsent = document.cookie
       .split('; ')
-      .some((cookie) => cookie.startsWith(`${COOKIE_NAME}=`))
+      .find((cookie) => cookie.startsWith(`${COOKIE_NAME}=`))
+      ?.split('=')[1]
 
-    if (!hasConsent) setVisible(true)
+    if (savedConsent === 'accepted' || savedConsent === 'necessary') setConsent(savedConsent)
+    else setVisible(true)
   }, [])
 
+  useEffect(() => {
+    if (consent !== 'accepted' || process.env.NODE_ENV !== 'production') return
+
+    initializeMetaPixel()
+    window.fbq?.('track', 'PageView')
+  }, [consent, pathname])
+
   function chooseConsent(value: 'accepted' | 'necessary') {
-    document.cookie = `${COOKIE_NAME}=${value}; Max-Age=31536000; Path=/; SameSite=Lax`
+    document.cookie = `${COOKIE_NAME}=${value}; Max-Age=31536000; Path=/; SameSite=Lax; Secure`
+    setConsent(value)
     setVisible(false)
   }
 
@@ -31,7 +74,7 @@ export function CookieConsent() {
     >
       <p className="eyebrow">A small note</p>
       <p id="cookie-copy" className="mt-3 text-sm leading-6 text-ink/70">
-        We use essential cookies to keep Anvance working and remember your cookie preference. We do not use advertising cookies.
+        We use essential cookies to keep Anvance working. With your permission, we also use Meta Pixel to understand visits and improve our advertising. You can continue with necessary cookies only.
       </p>
       <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center">
         <button
